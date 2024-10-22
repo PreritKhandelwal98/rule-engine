@@ -1,14 +1,19 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cors = require('cors');
+const dotenv = require('dotenv')
+dotenv.config();
 
 const app = express();
 app.use(bodyParser.json());
 
-const port = 5000;
+app.use(cors());
+
+const port = process.env.PORT;
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/ruleengine', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MONGODB_URL)
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.log(err));
 
