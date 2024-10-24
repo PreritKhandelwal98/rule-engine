@@ -36,3 +36,47 @@
     transform: rotate(360deg);
   }
 }
+
+.tree-view {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.tree-node {
+  margin: 10px;
+  text-align: center;
+}
+
+.node-value {
+  display: inline-block;
+  padding: 5px 10px;
+  border: 1px solid #007bff;
+  border-radius: 4px;
+  background-color: #f8f9fa;
+  margin: 5px;
+}
+
+.children {
+  display: flex;
+  justify-content: space-between;
+}
+
+.left-child, .right-child {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.left-child::after, .right-child::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 1px;
+  background: #007bff;
+  height: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}

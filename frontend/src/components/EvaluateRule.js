@@ -5,7 +5,7 @@ function EvaluateRule() {
     const [userData, setUserData] = useState({ age: "", department: "", salary: "" });
 
     const evaluateRule = async () => {
-        const response = await fetch('http://localhost:5000/api/evaluate_rule', {
+        const response = await fetch('http://localhost:5000/api/rules/evaluate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ ruleId, userData })
@@ -17,12 +17,6 @@ function EvaluateRule() {
     return (
         <div>
             <h2>Evaluate Rule</h2>
-            <input
-                type="text"
-                value={ruleId}
-                onChange={(e) => setRuleId(e.target.value)}
-                placeholder="Enter rule ID"
-            />
             <input
                 type="text"
                 value={userData.age}
