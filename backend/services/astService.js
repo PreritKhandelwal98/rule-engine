@@ -24,34 +24,41 @@ function createRuleAST(ruleString) {
         operandStack.push(node);
     }
 
-    tokens.forEach(token => {
+    for (let i = 0; i < tokens.length; i++) {
+        const token = tokens[i];
+
         if (token === "(") {
-            operatorStack.push(token);
+            // We can just continue and collect sub-expression
+            continue;
         } else if (token === ")") {
-            while (operatorStack.length && operatorStack[operatorStack.length - 1] !== "(") {
+            // Closing parentheses; process the last collected expression
+            while (operatorStack.length) {
                 const operator = operatorStack.pop();
                 applyOperator(operator);
             }
-            operatorStack.pop();  // Pop the '('
         } else if (token === "AND" || token === "OR") {
+            // Handle logical operators
             while (operatorStack.length && (operatorStack[operatorStack.length - 1] === "AND" || operatorStack[operatorStack.length - 1] === "OR")) {
                 const operator = operatorStack.pop();
                 applyOperator(operator);
             }
             operatorStack.push(token);
         } else if (["<", ">", "="].includes(token)) {
-            const rightOperand = tokens.shift();  // Get the next token
+            // If we find a comparison operator, combine the left and right operands
             const leftOperand = operandStack.pop(); // Get the left operand from the stack
+            const rightOperand = tokens[i + 1]; // The next token will be the right operand
 
             // Create a combined operand node
-            const operandNode = new Node('operand', `${leftOperand.value} ${token} ${rightOperand.replace(/'/g, "")}`.trim());
+            const operandNode = new Node('operand', `${leftOperand.value} ${token} ${rightOperand.replace(/'/g, "").trim()}`.trim());
             operandStack.push(operandNode);
+            i++; // Skip the next token since it's already processed
         } else {
-            // Operand like age, salary, etc. (also handle quotes here)
-            operandStack.push(new Node('operand', token.replace(/'/g, "").trim())); // Remove quotes around strings and trim whitespace
+            // Handle the operand, removing quotes if necessary
+            operandStack.push(new Node('operand', token.replace(/'/g, "").trim())); // Remove quotes around strings
         }
-    });
+    }
 
+    // Apply remaining operators in the stack
     while (operatorStack.length) {
         const operator = operatorStack.pop();
         applyOperator(operator);
@@ -62,10 +69,10 @@ function createRuleAST(ruleString) {
     return root;
 }
 
-// Example of usage
-const ruleString = "(age > 30 AND department = 'Sales')";
-const ast = createRuleAST(ruleString);
-console.log("Final AST:", ast);
+// Example usage
+// const ruleString = "(age > 30 AND department = 'Sales')";
+// const ast = createRuleAST(ruleString);
+// console.log("Final AST:", ast);
 
 module.exports = {
     createRuleAST,
